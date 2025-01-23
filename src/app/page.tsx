@@ -16,6 +16,7 @@ export default function Home() {
         <ol>
           <li>
             Get started by editing <code>src/app/page.tsx</code>.
+            Iniciar frontend com Next.js
           </li>
           <li>Save and see your changes instantly.</li>
         </ol>
