@@ -1,24 +1,36 @@
 'use client'
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import { createUser } from "@/service/userService";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { User } from "../models/User";
 
 export default function Cadastro() {
-    const [formData, setFormData] = useState({
-        nome: '',
+
+    const [formData, setFormData] = useState<User>({
+        name: '',
         email: '',
         password: '',
     });
+
+    const [message, setMessage] = useState<string | null>(null);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData({
             ...formData,
-            [name]: value
+            [name]: value,
         });
     }
 
-    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(formData);
+        try{
+            const response = await createUser(formData);
+            setMessage("Usuário cadastrado com sucesso");
+            console.log("Resposta da API", response);            
+        } catch (error) {
+            setMessage("Erro ao cadastrar usuário");
+            console.error("Erro ao cadastrar usuário", error);
+        }
     }
 
     return (
@@ -28,14 +40,15 @@ export default function Cadastro() {
                 <form onSubmit={handleSubmit}>
                     <input
                         type="text"
-                        name="nome"
+                        name="name"
                         placeholder="Nome"
-                        value={formData.nome}
+                        value={formData.name}
                         onChange={handleChange}
                     />
                     <input
                         type="email"
-                        name="email" placeholder="Email"
+                        name="email"
+                        placeholder="Email"
                         value={formData.email}
                         onChange={handleChange}
                     />
