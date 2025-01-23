@@ -2,7 +2,6 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 
 export default function Cadastro() {
-    const [isMounted, setIsMounted] = useState(false);
     const [formData, setFormData] = useState({
         nome: '',
         email: '',
