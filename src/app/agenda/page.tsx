@@ -1,3 +1,4 @@
+import TaskByDate from "../componets/TaskByDate";
 import TaskForm from "../componets/TaskForm";
 
 export default function AgendaPage() { 
@@ -5,6 +6,8 @@ export default function AgendaPage() {
         <div>
             <h1>Cadastro de Tarefas</h1>
             <TaskForm />
+            <h1>Tarefas</h1>
+            <TaskByDate />
         </div>
     );
 }
