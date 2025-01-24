@@ -72,7 +72,15 @@ export default function CalendarWithTasks() {
             </div>
             <div>
                 {daysInMonth.map((day) => (
-                    <div key={day.date}>
+                    <div                    
+                     key={day.date}
+                     style={{
+                        border: '1px solid #ddd',
+                        padding: '10px',
+                        textAlign: 'center',
+                        backgroundColor: day.hasTask ? '#d4edda' : '#f8d7da', // Verde se houver tarefas, vermelho se não
+                    }}
+                     >
                         <span>{day.date}</span>
                         {day.hasTask && <span>Tem tarefa</span>}
                     </div>
