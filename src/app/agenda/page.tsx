@@ -1,3 +1,4 @@
+import CalendarWithTasks from "../componets/CalendarWithTasks";
 import TaskByDate from "../componets/TaskByDate";
 import TaskForm from "../componets/TaskForm";
 
@@ -8,6 +9,8 @@ export default function AgendaPage() {
             <TaskForm />
             <h1>Tarefas</h1>
             <TaskByDate />
+            <h1>Calendário</h1>
+            <CalendarWithTasks />
         </div>
     );
 }
