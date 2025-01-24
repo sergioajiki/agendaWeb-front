@@ -1,0 +1,16 @@
+/* Define o contêiner para os cards */
+.task-container {
+    display: flex;
+    flex-wrap: wrap; /* Permite que os cards se movam para a próxima linha, se necessário */
+    gap: 16px; /* Espaçamento entre os cards */
+    justify-content: center; /* Centraliza os cards no contêiner */
+    padding: 16px; /* Adiciona espaçamento ao redor do contêiner */
+}
+
+/* Mensagem de erro ou nenhum resultado */
+.message {
+    color: #ff0000;
+    text-align: center;
+    margin-top: 16px;
+    font-size: 1rem;
+}

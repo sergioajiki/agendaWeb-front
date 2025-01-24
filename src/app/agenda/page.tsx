@@ -1,6 +1,6 @@
-import CalendarWithTasks from "../componets/CalendarWithTasks";
-import TaskByDate from "../componets/TaskByDate";
-import TaskForm from "../componets/TaskForm";
+import CalendarWithTasks from "../components/CalendarWithTasks";
+import TaskByDate from "../components/TaskByDate";
+import TaskForm from "../components/TaskForm";
 
 export default function AgendaPage() { 
     return (

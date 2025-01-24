@@ -3,6 +3,7 @@ import { ChangeEvent, useState } from "react";
 import { Task } from "../models/Task";
 import { getAllTasks } from "@/service/taskService";
 import TaskCard from "./TaskCard";
+import './TaskByDate.css';
 
 export default function TaskByDate() {
     const [selectedDate, setSelectedDate] = useState<string>('');
@@ -40,8 +41,8 @@ export default function TaskByDate() {
                 onChange={handleDateChange}
                 placeholder="Selecione uma data"
             />
-            {message && <p>{message}</p>}
-            <div>
+            {message && <p className="message">{message}</p>}
+            <div className="task-container">
                 {tasks.map((task) => (
                     <TaskCard key={task.id} task={task} />
                 ))}

@@ -1,0 +1,35 @@
+/* Estilo principal do cartão de tarefa */
+.task-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 10px 0;
+    background-color: #f8f9fa;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    width: 175px;
+  }
+  
+  /* Hover para melhorar a interação */
+  .task-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Título da tarefa */
+  .task-card h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #333;
+  }
+  
+  /* Detalhes da tarefa */
+  .task-card p {
+    margin: 8px 0;
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
+  .task-card p strong {
+    color: #000;
+  }

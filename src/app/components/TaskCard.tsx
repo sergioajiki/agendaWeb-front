@@ -1,5 +1,6 @@
 'use client';
 import { TaskCardProps } from "../models/Task";
+import './TaskCard.css';
 
 export default function TaskCard({ task }: TaskCardProps) {
     return (
