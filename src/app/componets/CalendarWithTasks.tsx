@@ -1,7 +1,8 @@
 'use client'
 
 import { getAllTasks } from "@/service/taskService";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import "./CalendarWithTasks.css";
 
 export default function CalendarWithTasks() {
     const [currentDate, setCurrentDate] = useState<Date>(new Date());
@@ -63,28 +64,36 @@ export default function CalendarWithTasks() {
     const daysInMonth = getDaysInMonth();
 
     return (
-        <div>
-            <h1>CalendarWithTasks</h1>
-            <div>
-                <button onClick={handlePreviousMonth}>Mês Anterior</button>
-                <span>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
-                <button onClick={handleNextMonth}>Próximo Mês</button>
-            </div>
-            <div>
-                {daysInMonth.map((day) => (
-                    <div                    
-                     key={day.date}
-                     style={{
-                        border: '1px solid #ddd',
-                        padding: '10px',
-                        textAlign: 'center',
-                        backgroundColor: day.hasTask ? '#d4edda' : '#f8d7da', // Verde se houver tarefas, vermelho se não
-                    }}
-                     >
-                        <span>{day.date}</span>
-                        {day.hasTask && <span>Tem tarefa</span>}
-                    </div>
-                ))}
+        <div className="calendar-conteiner">
+            <div className="calendar-header">
+                
+                <div>
+                    <button onClick={handlePreviousMonth}>
+                        Mês Anterior
+                    </button>
+                    <span>{currentDate.toLocaleString('default', { month: 'long', year: 'numeric' })}</span>
+                    <button onClick={handleNextMonth}>
+                        Próximo Mês
+                    </button>
+                </div>
+                <div className="calendar-grid">
+                    {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map((day) => (
+                        <div key={day}
+                            className="calendar-weekdays">
+                            {day}
+                        </div>
+                    ))}
+                    {daysInMonth.map((day) => (
+                        <div
+                            key={day.date}
+                            className={`calendar-day ${day.hasTask ? 'has-tasks' : 'no-tasks'}`}
+                        >
+                            <span>{day.date.split('-')[2]}</span>
+                            {day.hasTask && <span>Task</span>}
+                        </div>
+                    ))
+                    }
+                </div>
             </div>
         </div>
     );

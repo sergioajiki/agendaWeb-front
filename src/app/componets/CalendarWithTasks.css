@@ -1,0 +1,85 @@
+/* Container principal do calendário */
+.calendar-conteiner{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+/* Cabeçalho do calendário */
+.calendar-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.calendar-header span{
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+/* Botões de navegação do calendário */
+.calendar-header button{
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 8px 12px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 1 rem;
+}
+
+.calendar-header button:hover{
+    background-color: #e2e6ea;
+}
+
+/* Grid do calendário */
+.calendar-grid{
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+    width: 100%;
+    text-align: center;
+}
+
+/* Dias da semana */
+.calendar-weekdays{
+    font-weight: bold;
+    background-color: #f1f3f5;
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+/* Dias do mês */
+.calendar-day {
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Dias do mês com tarefas */
+.calendar-day.has-tasks{
+    background-color: #d4edda;
+}
+
+/* Dias do mês sem tarefas */
+.calendar-day.no-tasks{
+    background-color: #f8d7da;
+}
+
+/* Ajuste no hover */
+.calendar-day:hover{
+    background-color: #e9ecef;
+    cursor: pointer;
+}
