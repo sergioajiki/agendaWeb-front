@@ -37,10 +37,18 @@ export default function CalendarWithTasks() {
     const getDaysInMonth = () => {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const firstDayOfMonth = new Date(year, month, 1).getDay();
+        // Dia da semana do primeiro dia do mês
+        const daysInMonth = new Date(year, month + 1, 0).getDate() + 1;
+        console.log('daysInMonth', daysInMonth);
         const daysArray = [];
 
-        for (let day = 1; day <= daysInMonth; day++) {
+        // Adiciona dias vazios no início para alinhar o primeiro dia do mês
+        for (let i = 0; i < firstDayOfMonth; i++) {
+            daysArray.push({ date: null, hasTask: false });
+        }
+
+        for (let day = 2; day <= daysInMonth; day++) {
             const date = new Date(year, month, day);
             const formattedDate = date.toISOString().split('T')[0];
 
@@ -66,7 +74,7 @@ export default function CalendarWithTasks() {
     return (
         <div className="calendar-conteiner">
             <div className="calendar-header">
-                
+
                 <div className="calendar-navigation-month">
                     <button onClick={handlePreviousMonth}>
                         Mês Anterior
@@ -76,25 +84,28 @@ export default function CalendarWithTasks() {
                         Próximo Mês
                     </button>
                 </div>
-                <div className="calendar-grid">
-                    {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map((day) => (
-                        <div key={day}
-                            className="calendar-weekdays">
-                            {day}
-                        </div>
-                    ))}
-                    {daysInMonth.map((day) => (
-                        <div
-                            key={day.date}
-                            className={`calendar-day ${day.hasTask ? 'has-tasks' : 'no-tasks'}`}
-                        >
-                            <span>{day.date.split('-')[2]}</span>
-                            {day.hasTask && <span>Task</span>}
-                        </div>
-                    ))
-                    }
-                </div>
+            </div>
+            <div className="calendar-grid">
+                {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map((day) => (
+                    <div key={day}
+                        className="calendar-weekdays">
+                        {day}
+                    </div>
+                ))}
+                {daysInMonth.map((day, index) => (
+                    <div
+                        key={index}
+                        className={`calendar-day ${day.hasTask
+                                ? (day.hasTask ? 'has-task' : 'no-task')
+                                : 'empty-day'
+                            }`}
+                    >
+                        {day.date && <span>{new Date(day.date).getDate()}</span>}
+                        {day.hasTask && <span className="task-indicator">Task</span>}
+                    </div>
+                ))}
             </div>
         </div>
+
     );
 }

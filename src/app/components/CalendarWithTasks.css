@@ -85,6 +85,13 @@
     cursor: pointer;
 }
 
+.task-indicator {
+    font-size: 0.8rem;
+    color: #007bff;
+    display: block;
+    margin-top: 5px;
+}
+
 .calendar-navigation-month{
     display: flex;
     justify-content: space-between;
