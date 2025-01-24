@@ -37,7 +37,8 @@ export default function CalendarWithTasks() {
     const getDaysInMonth = () => {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
-        const firstDayOfMonth = new Date(year, month, 1).getDay();
+        const firstDayOfMonth = new Date(year, month, 0).getDay() + 1;
+        console.log('firstDayOfMonth', firstDayOfMonth);
         // Dia da semana do primeiro dia do mês
         const daysInMonth = new Date(year, month + 1, 0).getDate() + 1;
         console.log('daysInMonth', daysInMonth);
@@ -50,6 +51,7 @@ export default function CalendarWithTasks() {
 
         for (let day = 2; day <= daysInMonth; day++) {
             const date = new Date(year, month, day);
+            console.log('date', date);
             const formattedDate = date.toISOString().split('T')[0];
 
             daysArray.push({
