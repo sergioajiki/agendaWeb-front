@@ -7,10 +7,10 @@ export default function AgendaPage() {
         <div>
             <h1>Cadastro de Tarefas</h1>
             <TaskForm />
-            <h1>Tarefas</h1>
-            <TaskByDate />
             <h1>Calendário</h1>
             <CalendarWithTasks />
+            <h1>Tarefas</h1>
+            <TaskByDate />
         </div>
     );
 }

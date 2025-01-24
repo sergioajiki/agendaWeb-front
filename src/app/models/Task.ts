@@ -7,3 +7,7 @@ export interface Task {
     endTime: string;
     userId: string;
 }
+
+export interface TaskCardProps {
+    task: Task;
+}

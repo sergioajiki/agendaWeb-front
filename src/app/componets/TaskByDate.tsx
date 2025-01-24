@@ -2,6 +2,7 @@
 import { ChangeEvent, useState } from "react";
 import { Task } from "../models/Task";
 import { getAllTasks } from "@/service/taskService";
+import TaskCard from "./TaskCard";
 
 export default function TaskByDate() {
     const [selectedDate, setSelectedDate] = useState<string>('');
@@ -33,7 +34,6 @@ export default function TaskByDate() {
 
     return (
         <>
-            <h1>TaskByDate</h1>
             <input
                 type="date"
                 value={selectedDate}
@@ -43,15 +43,7 @@ export default function TaskByDate() {
             {message && <p>{message}</p>}
             <div>
                 {tasks.map((task) => (
-                    //alterar o back para retornar o id da task e substitur o title por id na Key
-                    <div key={task.title}>
-                        <h3>{task.id} - {task.title}</h3>
-                        <p><strong>Descrição:</strong> {task.description}</p>
-                        <p><strong>Data:</strong> {task.appointmentDate}</p>
-                        <p><strong>Hora de Início:</strong> {task.startTime}</p>
-                        <p><strong>Hora de Término:</strong> {task.endTime}</p>
-                        {task.userId && <p><strong>Responsável (ID):</strong> {task.userId}</p>}
-                    </div>
+                    <TaskCard key={task.id} task={task} />
                 ))}
             </div>
         </>

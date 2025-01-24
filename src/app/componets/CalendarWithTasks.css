@@ -11,6 +11,7 @@
 /* Cabeçalho do calendário */
 .calendar-header{
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     align-items: center;
     width: 100%;
@@ -82,4 +83,11 @@
 .calendar-day:hover{
     background-color: #e9ecef;
     cursor: pointer;
+}
+
+.calendar-navigation-month{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px;
 }

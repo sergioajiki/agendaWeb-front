@@ -67,7 +67,7 @@ export default function CalendarWithTasks() {
         <div className="calendar-conteiner">
             <div className="calendar-header">
                 
-                <div>
+                <div className="calendar-navigation-month">
                     <button onClick={handlePreviousMonth}>
                         Mês Anterior
                     </button>
