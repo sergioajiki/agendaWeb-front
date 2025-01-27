@@ -9,8 +9,8 @@ export default function AgendaPage() {
             <TaskForm />
             <h1>Calendário</h1>
             <CalendarWithTasks />
-            <h1>Tarefas</h1>
-            <TaskByDate />
+            {/* <h1>Tarefas</h1>
+            <TaskByDate /> */}
         </div>
     );
 }

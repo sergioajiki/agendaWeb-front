@@ -11,3 +11,7 @@ export interface Task {
 export interface TaskCardProps {
     task: Task;
 }
+
+export interface TaskByDateProps {
+    selectedDate: string;
+}
