@@ -5,6 +5,7 @@
     gap: 16px; /* Espaçamento entre os cards */
     justify-content: center; /* Centraliza os cards no contêiner */
     padding: 16px; /* Adiciona espaçamento ao redor do contêiner */
+    width: 600px;
 }
 
 /* Mensagem de erro ou nenhum resultado */

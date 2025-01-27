@@ -22,7 +22,7 @@ export default function CalendarWithTasks() {
                 // Agrupa as tarefas por data
                 allTasks.forEach((task) => {
                     const date = task.appointmentDate;
-                        taskMap[date] = true;
+                    taskMap[date] = true;
                 });
 
                 // Atualizar o state taskByDate
@@ -39,10 +39,11 @@ export default function CalendarWithTasks() {
     const getDaysInMonth = () => {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
+        // Dia da semana do primeiro dia do mês (0 = Domingo, 6 = Sábado)
         const firstDayOfMonth = new Date(year, month, 1).getDay();
         console.log('firstDayOfMonth', firstDayOfMonth);
-        // Dia da semana do primeiro dia do mês
-        const daysInMonth = new Date(year, month + 1, 0).getDate() + 1;
+        // Número total de dias no mês atual
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
         console.log('daysInMonth', daysInMonth);
         const daysArray = [];
 
@@ -51,10 +52,11 @@ export default function CalendarWithTasks() {
             daysArray.push({ date: null, hasTask: false });
         }
 
-        for (let day = 2; day <= daysInMonth; day++) {
-            const date = new Date(year, month, day);
-            console.log('date', date);
-            const formattedDate = date.toISOString().split('T')[0];
+        for (let day = 1; day <= daysInMonth; day++) {
+
+            const date = new Date(Date.UTC(year, month, day)); // Usa UTC para evitar deslocamentos
+            const formattedDate = date.toISOString().split("T")[0]; // Garante o formato "YYYY-MM-DD"
+
 
             daysArray.push({
                 date: formattedDate,
@@ -66,12 +68,12 @@ export default function CalendarWithTasks() {
 
     // Navegar entre os meses
     const handlePreviousMonth = () => {
-        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1));
+        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
         setSelectedDate(null);
     }
 
     const handleNextMonth = () => {
-        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1));
+        setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
         setSelectedDate(null);
     }
 
@@ -80,6 +82,7 @@ export default function CalendarWithTasks() {
     return (
         <div className="calendar-conteiner">
             <div className="calendar-header">
+                <h1>Calendário</h1>
 
                 <div className="calendar-navigation-month">
                     <button onClick={handlePreviousMonth}>
@@ -102,12 +105,17 @@ export default function CalendarWithTasks() {
                     <div
                         key={index}
                         className={`calendar-day ${day.date
-                            ? (day.hasTask ? 'has-task' : 'no-task')
-                            : 'empty-day'
+                            ? (day.hasTask ? "has-task" : "no-task")
+                            : "empty-day"
                             }`}
-                        onClick={() => day.date && setSelectedDate(day.date)} //Define a data selecionada ao clicar
+                        onClick={() => {
+                            if (day.date) {
+                                console.log(`Dia clicado: ${day.date}`);
+                                setSelectedDate(day.date);
+                            }
+                        }}
                     >
-                        {day.date && <span>{new Date(day.date).getDate()}</span>}
+                        {day.date && <span>{new Date(day.date).getUTCDate()}</span>} {/* Garante exibição correta */}
                         {day.hasTask && <span className="task-indicator">Task</span>}
                     </div>
                 ))}
@@ -116,7 +124,7 @@ export default function CalendarWithTasks() {
             {/* Exibe as tarefas do dia selecionado */}
             {selectedDate && (
                 <div className="task-by-date">
-                    <h3>Tarefas para {new Date(selectedDate).toLocaleDateString()}</h3>
+                    <h3>Tarefas para {new Date(selectedDate).getUTCDate()}</h3>
                     <TaskByDate selectedDate={selectedDate} />
                 </div>
             )}

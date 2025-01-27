@@ -53,7 +53,7 @@ export default function TaskForm() {
     return (
         <>
             <div className="task-form-container">
-                <h1>TaskForm</h1>
+                <h1>Cadastro de Tarefas</h1>
                 <form onSubmit={handleSubmit}>
                     <input
                         type="text"
