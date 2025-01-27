@@ -3,6 +3,7 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Task } from "../models/Task";
 import { createTask } from "@/service/taskService";
+import './TaskForm.css';
 
 export default function TaskForm() {
     const [formData, setFormData] = useState<Task>({
@@ -51,7 +52,7 @@ export default function TaskForm() {
     };
     return (
         <>
-            <div>
+            <div className="task-form-container">
                 <h1>TaskForm</h1>
                 <form onSubmit={handleSubmit}>
                     <input
@@ -73,20 +74,23 @@ export default function TaskForm() {
                         value={formData.appointmentDate}
                         onChange={handleDateChange}
                     />
-                    <input
-                        type="time"
-                        name="startTime"
-                        placeholder="Hora de início"
-                        value={formData.startTime}
-                        onChange={handleChange}
-                    />
-                    <input
-                        type="time"
-                        name="endTime"
-                        placeholder="Hora de término"
-                        value={formData.endTime}
-                        onChange={handleChange}
-                    />
+                    <div className="time-fields-container">
+                        <input
+                            type="time"
+                            name="startTime"
+                            placeholder="Hora de início"
+                            value={formData.startTime}
+                            onChange={handleChange}
+                        />
+                        <input
+                            type="time"
+                            name="endTime"
+                            placeholder="Hora de término"
+                            value={formData.endTime}
+                            onChange={handleChange}
+                        />
+
+                    </ div>
                     <input
                         type="text"
                         name="userId"
@@ -95,9 +99,10 @@ export default function TaskForm() {
                         onChange={handleChange}
                     />
                     <button type="submit">Cadastrar</button>
-                </form>
-                {message && <p>{message}</p>}
-            </div>
+                </form >
+                {message && <p>{message}</p>
+                }
+            </div >
         </>
     );
 }

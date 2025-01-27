@@ -1,0 +1,91 @@
+/* TaskForm.css */
+
+/* Estilo geral para o container */
+.task-form-container {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-family: Arial, sans-serif;
+}
+
+/* Título do formulário */
+.task-form-container h1 {
+    text-align: center;
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* Estilo dos inputs e textarea */
+.task-form-container input,
+.task-form-container textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+    outline: none;
+    box-sizing: border-box;
+}
+
+.task-form-container textarea {
+    resize: vertical;
+    height: 80px;
+}
+
+/* Foco nos inputs */
+.task-form-container input:focus,
+.task-form-container textarea:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 3px rgba(0, 123, 255, 0.5);
+}
+
+/* Botão de envio */
+.task-form-container button {
+    width: 100%;
+    padding: 10px 15px;
+    font-size: 1rem;
+    color: #fff;
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.task-form-container button:hover {
+    background-color: #0056b3;
+}
+
+/* Mensagens de feedback */
+.task-form-container p {
+    text-align: center;
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+/* Mensagem de sucesso */
+.task-form-container p.success {
+    color: #28a745;
+}
+
+/* Mensagem de erro */
+.task-form-container p.error {
+    color: #dc3545;
+}
+
+/* Estilo para alinhar os campos de hora lado a lado */
+.time-fields-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.time-fields-container input {
+    flex: 1; /* Faz com que os campos tenham tamanhos iguais */
+}
