@@ -6,8 +6,8 @@ export const createTask = async (task: Task): Promise<any> => {
     const response = await api.post('/api/tasks', task);
     return response.data as Task[];
   } catch (error: any) {
-    console.error("Erro ao cadastrar tarefa!", error.response?.data || error.message);
-    throw new Error("Erro ao cadastrar tarefa");
+    console.error("Erro ao cadastrar tarefa!", error.response?.data.detail);
+    throw new Error(error.response?.data.detail ||"Erro ao cadastrar tarefa");
   }
 }; 
 

@@ -3,7 +3,7 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import { Task } from "../models/Task";
 import { createTask } from "@/service/taskService";
-import './TaskForm.css';
+import './style/TaskForm.css';
 
 export default function TaskForm() {
     const [formData, setFormData] = useState<Task>({
@@ -46,8 +46,10 @@ export default function TaskForm() {
                 userId: ''
             });
         } catch (error: any) {
-            setMessage('Erro ao cadastrar tarefa!');
-            console.error(error.response?.data || error.message);
+            const errorMessage = error.response?.data?.status || 'Erro ao cadastrar tarefa';
+            console.log('meow', errorMessage);
+            setMessage(errorMessage)
+            console.error(error.response);
         }
     };
     return (

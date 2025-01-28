@@ -2,7 +2,7 @@
 
 import { getAllTasks } from "@/service/taskService";
 import { useEffect, useState } from "react";
-import "./CalendarWithTasks.css";
+import "./style/CalendarWithTasks.css";
 import TaskByDate from "./TaskByDate";
 
 export default function CalendarWithTasks() {
@@ -124,7 +124,7 @@ export default function CalendarWithTasks() {
             {/* Exibe as tarefas do dia selecionado */}
             {selectedDate && (
                 <div className="task-by-date">
-                    <h3>Tarefas para {new Date(selectedDate).getUTCDate()}</h3>
+                    <h1>Tarefas para {new Date(selectedDate).getUTCDate()}</h1>
                     <TaskByDate selectedDate={selectedDate} />
                 </div>
             )}

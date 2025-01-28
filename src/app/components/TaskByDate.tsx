@@ -3,7 +3,7 @@ import { ChangeEvent, use, useEffect, useState } from "react";
 import { Task, TaskByDateProps } from "../models/Task";
 import { getAllTasks } from "@/service/taskService";
 import TaskCard from "./TaskCard";
-import './TaskByDate.css';
+import './style/TaskByDate.css';
 
 export default function TaskByDate({ selectedDate }: TaskByDateProps) {
     //const [selectedDate, setSelectedDate] = useState<string>('');
