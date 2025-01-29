@@ -10,6 +10,7 @@ export interface Task {
 
 export interface TaskCardProps {
     task: Task;
+    onClose: () => void;
 }
 
 export interface TaskByDateProps {

@@ -9,6 +9,7 @@ export default function TaskByDate({ selectedDate }: TaskByDateProps) {
     //const [selectedDate, setSelectedDate] = useState<string>('');
     const [tasks, setTasks] = useState<Task[]>([]);
     const [message, setMessage] = useState<string | null>(null);
+    const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -30,41 +31,15 @@ export default function TaskByDate({ selectedDate }: TaskByDateProps) {
         fetchTasks();
     }, [selectedDate]);
 
-    // const handleDateChange = async (event: ChangeEvent<HTMLInputElement>) => {
-    //     const date = event.target.value;
-    //     setSelectedDate(date);
-
-    //     try {
-    //         const allTasks = await getAllTasks();
-    //         const filteredTasks = allTasks.filter(
-    //             (task) => task.appointmentDate === date
-    //         );
-
-    //         setTasks(filteredTasks);
-
-    //         if (filteredTasks.length === 0) {
-    //             setMessage('Nenhuma tarefa encontrada para a data selecionada');
-    //         } else {
-    //             setMessage(null);
-    //         }
-    //     } catch (error: any) {
-    //         console.error(error.response?.data || error.message);
-    //         setMessage('Erro ao buscar tarefas!');
-    //     }
-    // };
-
+    const handleCloseTaskCard = () => {
+        setSelectedTask(null); // Fecha o TaskCard
+    };
     return (
         <>
-            {/* <input
-                type="date"
-                value={selectedDate}
-                onChange={handleDateChange}
-                placeholder="Selecione uma data"
-            /> */}
             {message && <p className="message">{message}</p>}
             <div className="task-container">
                 {tasks.map((task) => (
-                    <TaskCard key={task.id} task={task} />
+                    <TaskCard key={task.id} task={task} onClose={handleCloseTaskCard} />
                 ))}
             </div>
         </>

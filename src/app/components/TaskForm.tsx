@@ -5,7 +5,12 @@ import { Task } from "../models/Task";
 import { createTask } from "@/service/taskService";
 import './style/TaskForm.css';
 
-export default function TaskForm() {
+interface TaskFormProps {
+    onSubmit: () => void;
+    onCancel: () => void;
+}
+
+export default function TaskForm({ onSubmit, onCancel }: TaskFormProps) {
     const [formData, setFormData] = useState<Task>({
         title: '',
         description: '',
@@ -45,6 +50,7 @@ export default function TaskForm() {
                 endTime: '',
                 userId: ''
             });
+            onSubmit(); // Notifica a página de agenda que o formulário foi enviado
         } catch (error: any) {
             const errorMessage = error.response?.data?.status || 'Erro ao cadastrar tarefa';
             console.log('meow', errorMessage);
@@ -101,6 +107,14 @@ export default function TaskForm() {
                         onChange={handleChange}
                     />
                     <button type="submit">Cadastrar</button>
+                    
+                    <button
+                        type="button"
+                        className="cancel-button"
+                        onClick={onCancel}
+                    >
+                        Fechar
+                    </button>
                 </form >
                 {message && <p>{message}</p>
                 }

@@ -3,12 +3,13 @@
 import { useEffect, useState } from 'react';
 import './style/WeeklyCalendar.css';
 import { getAllTasks } from '@/service/taskService';
+import TaskCard from './TaskCard';
 
 const hours = Array.from({ length: 24 }, (_, i) => `${i.toString().padStart(2, '0')}:00`);
 const daysOfWeek = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 
 export default function WeeklyCalendar() {
-    const [currentDate, setCurrentDate] = useState<Date>(new Date());
+    const [selectedTask, setSelectedTask] = useState<any | null>(null);
     const [tasks, setTasks] = useState<Record<string, any[]>>({});
     const [currentWeek, setCurrentWeek] = useState<Date[]>([]);
 
@@ -45,31 +46,42 @@ export default function WeeklyCalendar() {
         fetchTasks();
     }, []);
 
+    const handleTaskClick = (task: any) => {
+        setSelectedTask(task); // Atualiza o estado da tarefa selecionada
+    };
 
-        // Renderiza a grade do calendário semanal
-        const renderGrid = () => {
-            const hours = Array.from({ length: 24 }, (_, i) => i); // Horas de 0 a 23
-            return hours.map((hour) => (
-                <div key={hour} className="calendar-row">
-                    <div className="hour-cell">{`${hour}:00`}</div>
-                    {currentWeek.map((day) => {
-                        const dateKey = `${day.toISOString().split('T')[0]}T${String(hour).padStart(2, '0')}:00`;
-                        const tasksForSlot = tasks[dateKey] || [];
-                        return (
-                            <div key={day.toISOString()} className="day-cell">
-                                {tasksForSlot.map((task, index) => (
-                                    <div key={index} className="task">
-                                        {task.title}
-                                    </div>
-                                ))}
-                            </div>
-                        );
-                    })}
-                </div>
-            ));
-        };
+    const handleCloseTaskCard = () => {
+        setSelectedTask(null); // Fecha o card da tarefa
+    };
 
-            // Navegação entre semanas
+    // Renderiza a grade do calendário semanal
+    const renderGrid = () => {
+        const hours = Array.from({ length: 24 }, (_, i) => i); // Horas de 0 a 23
+        return hours.map((hour) => (
+            <div key={hour} className="calendar-row">
+                <div className="hour-cell">{`${hour}:00`}</div>
+                {currentWeek.map((day) => {
+                    const dateKey = `${day.toISOString().split('T')[0]}T${String(hour).padStart(2, '0')}:00`;
+                    const tasksForSlot = tasks[dateKey] || [];
+                    return (
+                        <div key={day.toISOString()} className="day-cell">
+                            {tasksForSlot.map((task, index) => (
+                                <div
+                                    key={index}
+                                    className="task"
+                                    onClick={() => handleTaskClick(task)}
+                                >
+                                    {task.title}
+                                </div>
+                            ))}
+                        </div>
+                    );
+                })}
+            </div>
+        ));
+    };
+
+    // Navegação entre semanas
     const handlePreviousWeek = () => {
         setCurrentWeek((prevWeek) =>
             prevWeek.map((day) => new Date(day.setDate(day.getDate() - 7)))
@@ -81,7 +93,6 @@ export default function WeeklyCalendar() {
             prevWeek.map((day) => new Date(day.setDate(day.getDate() + 7)))
         );
     };
-
 
     return (
         <div className="weekly-calendar-container">
@@ -107,6 +118,7 @@ export default function WeeklyCalendar() {
                 </div>
                 {renderGrid()}
             </div>
+            {selectedTask && <TaskCard task={selectedTask} onClose={handleCloseTaskCard} />}
         </div>
     );
 }

@@ -1,25 +1,70 @@
+'use client';
+
+import { useState } from "react";
 import CalendarWithTasks from "../components/CalendarWithTasks";
-import TaskByDate from "../components/TaskByDate";
-import TaskForm from "../components/TaskForm";
 import WeeklyCalendar from "../components/WeeklyCalendar";
-import './agenda.css';
+import './style/agenda.css';
+import TaskForm from "../components/TaskForm";
 
 export default function AgendaPage() {
+    const [viewMode, setViewMode] = useState<"monthly" | "weekly">("weekly");
+    const [showTaskForm, setShowTaskForm] = useState(false);
+
+    const handleViewChange = (mode: "monthly" | "weekly") => {
+        setViewMode(mode);
+    };
+
+    const handleTaskFormSubmit = () => {
+        setShowTaskForm(false); // Oculta o formulário após o cadastro
+    };
+
+    const handleTaskFormCancel = () => {
+        setShowTaskForm(false); // Oculta o formulário ao clicar em "Fechar"
+    };
+
     return (
         <div className="agenda-page">
-            {/* <div className="task-form-container">
-                <TaskForm />
-            </div> */}
-            <div>
-                <h1>WeeklyCalendar</h1>
-                <WeeklyCalendar />
+            <div className="view-selector">
+                <button
+                    className={viewMode === "monthly" ? "active" : ""}
+                    onClick={() => handleViewChange("monthly")}
+                >
+                    Agenda Mensal
+                </button>
+                <button
+                    className={viewMode === "weekly" ? "active" : ""}
+                    onClick={() => handleViewChange("weekly")}
+                >
+                    Agenda Semanal
+                </button>
+                <button
+                    className="add-task-button"
+                    onClick={() => setShowTaskForm(true)}
+                >
+                    Adicionar Tarefa
+                </button>
             </div>
 
-            {/* <div className="calendar-container">
-                <CalendarWithTasks />
-            </div> */}
-            {/* <h1>Tarefas</h1>
-            <TaskByDate /> */}
+            <div className="agenda-content">
+                {showTaskForm && (
+                    <TaskForm 
+                    onSubmit={handleTaskFormSubmit}
+                    onCancel={handleTaskFormCancel} />
+                )}
+
+                {viewMode === "weekly" && (
+                    <>
+                        <h1>Agenda Semanal</h1>
+                        <WeeklyCalendar />
+                    </>
+                )}
+                {viewMode === "monthly" && (
+                    <>
+                        <h1>Agenda Mensal</h1>
+                        <CalendarWithTasks />
+                    </>
+                )}
+            </div>
         </div>
     );
 }
