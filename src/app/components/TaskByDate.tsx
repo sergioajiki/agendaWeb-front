@@ -5,20 +5,20 @@ import { getAllTasks } from "@/service/taskService";
 import TaskCard from "./TaskCard";
 import './style/TaskByDate.css';
 
-export default function TaskByDate({ selectedDate }: TaskByDateProps) {
+export default function TaskByDate({ selectedDate, onSelectTask, fetchTasks }: TaskByDateProps) {
     //const [selectedDate, setSelectedDate] = useState<string>('');
     const [tasks, setTasks] = useState<Task[]>([]);
     const [message, setMessage] = useState<string | null>(null);
     const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
     useEffect(() => {
-        const fetchTasks = async () => {
+        const fetchTasksForDate = async () => {
             try {
                 const allTasks = await getAllTasks();
-                const filteredTasks = allTasks.filter((task) => task.appointmentDate === selectedDate);
-                setTasks(filteredTasks);
+                const tasksForDate = allTasks.filter((task) => task.appointmentDate === selectedDate);
+                setTasks(tasksForDate);
 
-                if (filteredTasks.length === 0) {
+                if (tasksForDate.length === 0) {
                     setMessage('Nenhuma tarefa encontrada para a data selecionada');
                 } else {
                     setMessage(null);
@@ -28,8 +28,8 @@ export default function TaskByDate({ selectedDate }: TaskByDateProps) {
                 setMessage('Erro ao buscar tarefas!');
             }
         };
-        fetchTasks();
-    }, [selectedDate]);
+        fetchTasksForDate();
+    }, [selectedDate, fetchTasks]);
 
     const handleCloseTaskCard = () => {
         setSelectedTask(null); // Fecha o TaskCard
@@ -39,9 +39,22 @@ export default function TaskByDate({ selectedDate }: TaskByDateProps) {
             {message && <p className="message">{message}</p>}
             <div className="task-container">
                 {tasks.map((task) => (
-                    <TaskCard key={task.id} task={task} onClose={handleCloseTaskCard} />
+                    <div
+                        key={task.id}
+                        onClick={() => onSelectTask(task)}
+                    >
+                        {task.title}
+                    </div>
                 ))}
             </div>
+            {selectedTask && (
+                <TaskCard
+                    task={selectedTask}
+                    onClose={handleCloseTaskCard}
+                    onUpdateTask={fetchTasks}
+                />
+            )}
+
         </>
     );
 }

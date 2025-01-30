@@ -10,7 +10,7 @@
     margin-bottom: 1rem;
 }
 
-.calendar-grid {
+.calendar-grid-week {
     display: grid;
     grid-template-columns: 1fr repeat(7, 1fr);
     gap: 1px;
@@ -50,3 +50,4 @@
     padding: 0.5rem;
     font-weight: bold;
 }
+

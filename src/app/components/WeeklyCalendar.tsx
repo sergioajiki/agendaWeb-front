@@ -1,9 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import './style/WeeklyCalendar.css';
 import { getAllTasks } from '@/service/taskService';
 import TaskCard from './TaskCard';
+import './style/WeeklyCalendar.css';
 
 const hours = Array.from({ length: 24 }, (_, i) => `${i.toString().padStart(2, '0')}:00`);
 const daysOfWeek = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
@@ -25,26 +25,27 @@ export default function WeeklyCalendar() {
         setCurrentWeek(week);
     }, []);
 
-    // Busca tarefas do backend
+    // Busca tarefas do backend    
+    const fetchTasks = async () => {
+        try {
+            const allTasks = await getAllTasks();
+            const taskMap: Record<string, any[]> = {};
+
+            allTasks.forEach((task) => {
+                const dateTimeKey = `${task.appointmentDate}T${task.startTime}`;
+                if (!taskMap[dateTimeKey]) taskMap[dateTimeKey] = [];
+                taskMap[dateTimeKey].push(task);
+            });
+
+            setTasks(taskMap);
+        } catch (error) {
+            console.error("Erro ao carregar tarefas:", error);
+        }
+    };
+
     useEffect(() => {
-        const fetchTasks = async () => {
-            try {
-                const allTasks = await getAllTasks();
-                const taskMap: Record<string, any[]> = {};
-
-                allTasks.forEach((task) => {
-                    const dateTimeKey = `${task.appointmentDate}T${task.startTime}`;
-                    if (!taskMap[dateTimeKey]) taskMap[dateTimeKey] = [];
-                    taskMap[dateTimeKey].push(task);
-                });
-
-                setTasks(taskMap);
-            } catch (error) {
-                console.error("Erro ao carregar tarefas:", error);
-            }
-        };
         fetchTasks();
-    }, []);
+    }, [currentWeek]); // Atualiza as tarefas ao mudar de semana
 
     const handleTaskClick = (task: any) => {
         setSelectedTask(task); // Atualiza o estado da tarefa selecionada
@@ -104,7 +105,7 @@ export default function WeeklyCalendar() {
                 </span>
                 <button onClick={handleNextWeek}>Próxima Semana</button>
             </div>
-            <div className="calendar-grid">
+            <div className="calendar-grid-week">
                 <div className="calendar-row">
                     <div className="hour-cell"></div>
                     {currentWeek.map((day, index) => (
@@ -118,7 +119,11 @@ export default function WeeklyCalendar() {
                 </div>
                 {renderGrid()}
             </div>
-            {selectedTask && <TaskCard task={selectedTask} onClose={handleCloseTaskCard} />}
+            {selectedTask && <TaskCard
+                task={selectedTask}
+                onClose={handleCloseTaskCard}
+                onUpdateTask={fetchTasks}
+            />}
         </div>
     );
 }

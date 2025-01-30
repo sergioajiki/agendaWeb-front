@@ -38,7 +38,7 @@
 }
 
 /* Grid do calendário */
-.calendar-grid{
+.calendar-grid-month{
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 10px;
@@ -98,3 +98,13 @@
     width: 100%;
     padding: 10px;
 }
+
+.task-container {
+    display: flex;            /* Exibe as tarefas em linha (horizontalmente) */
+    flex-wrap: wrap;          /* Permite quebra para próxima linha, se necessário */
+    gap: 12px;                /* Espaço entre as tarefas */
+    margin-top: 20px;
+    width: 100%;
+    justify-content: flex-start; /* Alinha os itens à esquerda */
+    align-items: flex-start;     /* Alinha os cartões no topo */
+  }

@@ -2,13 +2,16 @@
 
 import { getAllTasks } from "@/service/taskService";
 import { useEffect, useState } from "react";
+import { Task } from "../models/Task";
+import TaskCard from "./TaskCard";
 import "./style/CalendarWithTasks.css";
-import TaskByDate from "./TaskByDate";
+
 
 export default function CalendarWithTasks() {
     const [currentDate, setCurrentDate] = useState<Date>(new Date());
-    const [taskByDate, setTaskByDate] = useState<Record<string, boolean>>({}); //Tarefas agrupadas por data 
+    const [taskByDate, setTaskByDate] = useState<Record<string, Task[]>>({}); //Tarefas agrupadas por data 
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
+    const [selectedTasks, setSelectedTasks] = useState<Task[]>([]);
 
     useEffect(() => {
         // Função para buscar as tarefas quando o componete estiver montado ou mudar o mês
@@ -17,12 +20,15 @@ export default function CalendarWithTasks() {
             try {
                 // Buscar as tarefas do mês
                 const allTasks = await getAllTasks();
-                const taskMap: Record<string, boolean> = {};
+                const taskMap: Record<string, Task[]> = {};
 
                 // Agrupa as tarefas por data
                 allTasks.forEach((task) => {
                     const date = task.appointmentDate;
-                    taskMap[date] = true;
+                    if (!taskMap[date]) {
+                        taskMap[date] = [];
+                    }
+                    taskMap[date].push(task);
                 });
 
                 // Atualizar o state taskByDate
@@ -35,36 +41,37 @@ export default function CalendarWithTasks() {
         fetchTasks();
     }, [currentDate]);
 
-    // Função para gerar os dias do mês atual
     const getDaysInMonth = () => {
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
-        // Dia da semana do primeiro dia do mês (0 = Domingo, 6 = Sábado)
-        const firstDayOfMonth = new Date(year, month, 1).getDay();
-        console.log('firstDayOfMonth', firstDayOfMonth);
-        // Número total de dias no mês atual
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        console.log('daysInMonth', daysInMonth);
-        const daysArray = [];
+
+        // Obtém o primeiro dia do mês corretamente em UTC
+        const firstDayOfMonth = new Date(Date.UTC(year, month, 1)).getUTCDay();
+        const totalDays = new Date(year, month + 1, 0).getDate();
+        console.log("Ano:", year, "Mês:", month, "Primeiro dia da semana:", firstDayOfMonth, "Total de dias:", totalDays);
 
         // Adiciona dias vazios no início para alinhar o primeiro dia do mês
+        const daysArray = [];
         for (let i = 0; i < firstDayOfMonth; i++) {
             daysArray.push({ date: null, hasTask: false });
         }
 
-        for (let day = 1; day <= daysInMonth; day++) {
-
+        for (let day = 1; day <= totalDays; day++) {
             const date = new Date(Date.UTC(year, month, day)); // Usa UTC para evitar deslocamentos
             const formattedDate = date.toISOString().split("T")[0]; // Garante o formato "YYYY-MM-DD"
-
-
             daysArray.push({
                 date: formattedDate,
                 hasTask: taskByDate[formattedDate] || false,
             });
         }
+
+        while (daysArray.length % 7 !== 0) {
+            console.log('daysArray.length', daysArray.length);
+            daysArray.push({ date: null, hasTask: false });
+        }
+        console.log("Número total de células no calendário:", daysArray.length);
         return daysArray;
-    }
+    };
 
     // Navegar entre os meses
     const handlePreviousMonth = () => {
@@ -76,6 +83,41 @@ export default function CalendarWithTasks() {
         setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1));
         setSelectedDate(null);
     }
+
+    const handleDayClick = (date: string | null) => {
+        if (date) {
+            setSelectedDate(date);
+            setSelectedTasks(taskByDate[date] || []);
+        }
+    };
+
+    const handleCloseTaskCards = () => {
+        setSelectedTasks([]);
+        setSelectedDate(null);
+    };
+
+    const handleUpdateTasks = async () => {
+        try {
+            const allTasks = await getAllTasks();
+            const taskMap: Record<string, Task[]> = {};
+
+            allTasks.forEach((task) => {
+                const date = task.appointmentDate;
+                if (!taskMap[date]) {
+                    taskMap[date] = [];
+                }
+                taskMap[date].push(task);
+            });
+
+            setTaskByDate(taskMap);
+
+            if (selectedDate) {
+                setSelectedTasks(taskMap[selectedDate] || []);
+            }
+        } catch (error: any) {
+            console.error('Erro ao atualizar tarefas!', error.response?.data || error.message);
+        }
+    };
 
     const daysInMonth = getDaysInMonth();
 
@@ -94,13 +136,15 @@ export default function CalendarWithTasks() {
                     </button>
                 </div>
             </div>
-            <div className="calendar-grid">
-                {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map((day) => (
-                    <div key={day}
-                        className="calendar-weekdays">
-                        {day}
-                    </div>
-                ))}
+            <div className="calendar-grid-month">
+                {['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'].map((day, index) => {
+                    console.log(`Dia ${index + 1}: ${day}`);
+                    return (
+                        <div key={index} className="calendar-weekdays">
+                            {day}
+                        </div>
+                    );
+                })}
                 {daysInMonth.map((day, index) => (
                     <div
                         key={index}
@@ -108,12 +152,7 @@ export default function CalendarWithTasks() {
                             ? (day.hasTask ? "has-task" : "no-task")
                             : "empty-day"
                             }`}
-                        onClick={() => {
-                            if (day.date) {
-                                console.log(`Dia clicado: ${day.date}`);
-                                setSelectedDate(day.date);
-                            }
-                        }}
+                        onClick={() => handleDayClick(day.date)}
                     >
                         {day.date && <span>{new Date(day.date).getUTCDate()}</span>} {/* Garante exibição correta */}
                         {day.hasTask && <span className="task-indicator">Task</span>}
@@ -123,28 +162,25 @@ export default function CalendarWithTasks() {
 
             {/* Exibe as tarefas do dia selecionado */}
             {selectedDate && (
-                <div className="task-by-date">
-                    <h1>Tarefas para {new Date(selectedDate).getUTCDate()}</h1>
-                    <TaskByDate selectedDate={selectedDate} />
+                <div>
+                    <h2>Tarefas para {new Date(selectedDate).toLocaleDateString()}</h2>
+                    <div className="task-container">
+
+                        {selectedTasks.length > 0 ? (
+                            selectedTasks.map((task) => (
+                                <TaskCard
+                                    key={task.id}
+                                    task={task}
+                                    onClose={handleCloseTaskCards}
+                                    onUpdateTask={handleUpdateTasks} // 🔹 Atualiza após edição/exclusão
+                                />
+                            ))
+                        ) : (
+                            <p className="no-tasks-message">Nenhuma tarefa para esta data.</p>
+                        )}
+                    </div>
                 </div>
             )}
-
-            {/* Contêiner de detalhes das tarefas */}
-            {/* {selectedDate && (
-                <div className="task-details-container">
-                    <h2>Tarefas do dia {selectedDate}</h2>
-                    {taskByDate[selectedDate] && taskByDate[selectedDate].length > 0 ? (
-                        <ul>
-                            {taskByDate[selectedDate].map((task, index) => (
-                                <li key={index}>{task.title}</li>
-                            ))}
-                        </ul>
-                    ) : (
-                        <p>Não há tarefas para este dia.</p>
-                    )}
-                    <button onClick={() => setSelectedDate(null)}>Fechar</button>
-                </div>
-            )} */}
         </div>
     );
 }
