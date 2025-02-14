@@ -163,7 +163,7 @@ export default function CalendarWithTasks() {
             {/* Exibe as tarefas do dia selecionado */}
             {selectedDate && (
                 <div>
-                    <h2>Tarefas para {new Date(selectedDate).toLocaleDateString()}</h2>
+                    <h2>Tarefas para dia {new Date(selectedDate).getUTCDate()}</h2>
                     <div className="task-container">
 
                         {selectedTasks.length > 0 ? (

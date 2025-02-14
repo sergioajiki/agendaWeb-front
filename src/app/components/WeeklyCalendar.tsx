@@ -85,15 +85,19 @@ export default function WeeklyCalendar() {
     // Navegação entre semanas
     const handlePreviousWeek = () => {
         setCurrentWeek((prevWeek) =>
-            prevWeek.map((day) => new Date(day.setDate(day.getDate() - 7)))
+            prevWeek.map((day) => new Date(day.getFullYear(), day.getMonth(), day.getDate() - 7))
+        );
+    };
+    
+    const handleNextWeek = () => {
+        setCurrentWeek((prevWeek) =>
+            prevWeek.map((day) => new Date(day.getFullYear(), day.getMonth(), day.getDate() + 7))
         );
     };
 
-    const handleNextWeek = () => {
-        setCurrentWeek((prevWeek) =>
-            prevWeek.map((day) => new Date(day.setDate(day.getDate() + 7)))
-        );
-    };
+    console.log("currentWeek", currentWeek.map(d => d.toISOString().split("T")[0]));
+
+    console.log("Tarefas carregadas:", tasks);
 
     return (
         <div className="weekly-calendar-container">
