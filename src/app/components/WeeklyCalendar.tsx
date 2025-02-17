@@ -32,9 +32,10 @@ export default function WeeklyCalendar() {
             const taskMap: Record<string, any[]> = {};
 
             allTasks.forEach((task) => {
-                const dateTimeKey = `${task.appointmentDate}T${task.startTime}`;
-                if (!taskMap[dateTimeKey]) taskMap[dateTimeKey] = [];
-                taskMap[dateTimeKey].push(task);
+                const formattedDate = new Date(task.appointmentDate).toISOString().split("T")[0];
+                const hourKey = `${formattedDate}T${task.startTime.split(':')[0]}:00`; // Mantém apenas HH:00
+                if (!taskMap[hourKey]) taskMap[hourKey] = [];
+                taskMap[hourKey].push(task);
             });
 
             setTasks(taskMap);
@@ -63,7 +64,10 @@ export default function WeeklyCalendar() {
                 <div className="hour-cell">{`${hour}:00`}</div>
                 {currentWeek.map((day) => {
                     const dateKey = `${day.toISOString().split('T')[0]}T${String(hour).padStart(2, '0')}:00`;
-                    const tasksForSlot = tasks[dateKey] || [];
+                    const datePrefix = `${day.toISOString().split('T')[0]}T${String(hour).padStart(2, '0')}:`;
+                    const tasksForSlot = Object.keys(tasks)
+                        .filter(key => key.startsWith(datePrefix)) // Pega todas as tarefas dentro daquela hora
+                        .flatMap(key => tasks[key]); // Junta todas em um único array
                     return (
                         <div key={day.toISOString()} className="day-cell">
                             {tasksForSlot.map((task, index) => (
@@ -88,7 +92,7 @@ export default function WeeklyCalendar() {
             prevWeek.map((day) => new Date(day.getFullYear(), day.getMonth(), day.getDate() - 7))
         );
     };
-    
+
     const handleNextWeek = () => {
         setCurrentWeek((prevWeek) =>
             prevWeek.map((day) => new Date(day.getFullYear(), day.getMonth(), day.getDate() + 7))
