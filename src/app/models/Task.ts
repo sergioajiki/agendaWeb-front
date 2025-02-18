@@ -11,8 +11,7 @@ export interface Task {
 export interface TaskCardProps {
     task: Task;
     onClose: () => void;
-    onUpdateTask: () => void;
-    
+    onUpdateTask: () => void;    
 }
 
 export interface TaskByDateProps {

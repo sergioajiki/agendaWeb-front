@@ -37,12 +37,6 @@ export default function AgendaPage() {
                 >
                     Agenda Semanal
                 </button>
-                {/* <button
-                    className="add-task-button"
-                    onClick={() => setShowTaskForm(true)}
-                >
-                    Adicionar Tarefa
-                </button> */}
             </div>
 
             <div className="agenda-content">

@@ -7,15 +7,12 @@ import TaskCard from "./TaskCard";
 import "./style/CalendarWithTasks.css";
 import TaskForm from "./TaskForm";
 
-
 export default function CalendarWithTasks() {
     const [currentDate, setCurrentDate] = useState<Date>(new Date());
     const [taskByDate, setTaskByDate] = useState<Record<string, Task[]>>({}); //Tarefas agrupadas por data 
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [selectedTasks, setSelectedTasks] = useState<Task[]>([]);
     const [showTaskForm, setShowTaskForm] = useState(false); // Controle do formulário
-
-
 
     useEffect(() => {
         fetchTasks();

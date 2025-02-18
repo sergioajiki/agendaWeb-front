@@ -104,7 +104,6 @@ export default function WeeklyCalendar() {
     };
 
     console.log("currentWeek", currentWeek.map(d => d.toISOString().split("T")[0]));
-
     console.log("Tarefas carregadas:", tasks);
 
     return (

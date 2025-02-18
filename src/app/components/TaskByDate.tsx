@@ -54,7 +54,6 @@ export default function TaskByDate({ selectedDate, onSelectTask, fetchTasks }: T
                     onUpdateTask={fetchTasks}
                 />
             )}
-
         </>
     );
 }
