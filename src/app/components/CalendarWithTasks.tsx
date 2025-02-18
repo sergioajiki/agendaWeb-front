@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Task } from "../models/Task";
 import TaskCard from "./TaskCard";
 import "./style/CalendarWithTasks.css";
+import TaskForm from "./TaskForm";
 
 
 export default function CalendarWithTasks() {
@@ -12,34 +13,38 @@ export default function CalendarWithTasks() {
     const [taskByDate, setTaskByDate] = useState<Record<string, Task[]>>({}); //Tarefas agrupadas por data 
     const [selectedDate, setSelectedDate] = useState<string | null>(null);
     const [selectedTasks, setSelectedTasks] = useState<Task[]>([]);
+    const [showTaskForm, setShowTaskForm] = useState(false); // Controle do formulário
+
+
 
     useEffect(() => {
-        // Função para buscar as tarefas quando o componete estiver montado ou mudar o mês
-        const fetchTasks = async () => {
-
-            try {
-                // Buscar as tarefas do mês
-                const allTasks = await getAllTasks();
-                const taskMap: Record<string, Task[]> = {};
-
-                // Agrupa as tarefas por data
-                allTasks.forEach((task) => {
-                    const date = task.appointmentDate;
-                    if (!taskMap[date]) {
-                        taskMap[date] = [];
-                    }
-                    taskMap[date].push(task);
-                });
-
-                // Atualizar o state taskByDate
-                setTaskByDate(taskMap);
-
-            } catch (error: any) {
-                console.error('Erro ao buscar tarefas!', error.response?.data || error.message);
-            }
-        };
         fetchTasks();
     }, [currentDate]);
+
+    // Função para buscar as tarefas quando o componete estiver montado ou mudar o mês
+    const fetchTasks = async () => {
+
+        try {
+            // Buscar as tarefas do mês
+            const allTasks = await getAllTasks();
+            const taskMap: Record<string, Task[]> = {};
+
+            // Agrupa as tarefas por data
+            allTasks.forEach((task) => {
+                const date = task.appointmentDate;
+                if (!taskMap[date]) {
+                    taskMap[date] = [];
+                }
+                taskMap[date].push(task);
+            });
+
+            // Atualizar o state taskByDate
+            setTaskByDate(taskMap);
+
+        } catch (error: any) {
+            console.error('Erro ao buscar tarefas!', error.response?.data || error.message);
+        }
+    };
 
     const getDaysInMonth = () => {
         const year = currentDate.getFullYear();
@@ -134,6 +139,7 @@ export default function CalendarWithTasks() {
                     <button onClick={handleNextMonth}>
                         Próximo Mês
                     </button>
+                    <button onClick={() => setShowTaskForm(true)}>Nova Tarefa</button>
                 </div>
             </div>
             <div className="calendar-grid-month">
@@ -159,6 +165,16 @@ export default function CalendarWithTasks() {
                     </div>
                 ))}
             </div>
+
+            {showTaskForm && (
+                <TaskForm 
+                    onSubmit={() => {
+                        fetchTasks(); // Atualiza calendário ao cadastrar
+                        setShowTaskForm(false);
+                    }}
+                    onCancel={() => setShowTaskForm(false)}
+                />
+            )}
 
             {/* Exibe as tarefas do dia selecionado */}
             {selectedDate && (

@@ -39,6 +39,7 @@ export default function TaskForm({ onSubmit, onCancel }: TaskFormProps) {
 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        setMessage(null);
         try {
             await createTask(formData);
             setMessage('Tarefa cadastrada com sucesso!');
@@ -53,9 +54,9 @@ export default function TaskForm({ onSubmit, onCancel }: TaskFormProps) {
             onSubmit(); // Notifica a página de agenda que o formulário foi enviado
         } catch (error: any) {
             const errorMessage = error.response?.data?.status || 'Erro ao cadastrar tarefa';
-            console.log('meow', errorMessage);
-            setMessage(errorMessage)
+            // console.log('meow', errorMessage);
             console.error(error.response);
+            setMessage(errorMessage)
         }
     };
     return (

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { getAllTasks } from '@/service/taskService';
 import TaskCard from './TaskCard';
 import './style/WeeklyCalendar.css';
+import TaskForm from './TaskForm';
 
 const hours = Array.from({ length: 24 }, (_, i) => `${i.toString().padStart(2, '0')}:00`);
 const daysOfWeek = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
@@ -12,6 +13,7 @@ export default function WeeklyCalendar() {
     const [selectedTask, setSelectedTask] = useState<any | null>(null);
     const [tasks, setTasks] = useState<Record<string, any[]>>({});
     const [currentWeek, setCurrentWeek] = useState<Date[]>([]);
+    const [showTaskForm, setShowTaskForm] = useState(false);
 
     // Inicializa os dias da semana atual
     useEffect(() => {
@@ -33,7 +35,7 @@ export default function WeeklyCalendar() {
 
             allTasks.forEach((task) => {
                 const formattedDate = new Date(task.appointmentDate).toISOString().split("T")[0];
-                const hourKey = `${formattedDate}T${task.startTime.split(':')[0]}:00`; // Mantém apenas HH:00
+                const hourKey = `${formattedDate}T${task.startTime}`; // Agora inclui HH:mm corretamente
                 if (!taskMap[hourKey]) taskMap[hourKey] = [];
                 taskMap[hourKey].push(task);
             });
@@ -46,7 +48,7 @@ export default function WeeklyCalendar() {
 
     useEffect(() => {
         fetchTasks();
-    }, [currentWeek]); // Atualiza as tarefas ao mudar de semana
+    }, []); // Atualiza as tarefas ao mudar de semana
 
     const handleTaskClick = (task: any) => {
         setSelectedTask(task); // Atualiza o estado da tarefa selecionada
@@ -63,11 +65,13 @@ export default function WeeklyCalendar() {
             <div key={hour} className="calendar-row">
                 <div className="hour-cell">{`${hour}:00`}</div>
                 {currentWeek.map((day) => {
-                    const dateKey = `${day.toISOString().split('T')[0]}T${String(hour).padStart(2, '0')}:00`;
-                    const datePrefix = `${day.toISOString().split('T')[0]}T${String(hour).padStart(2, '0')}:`;
+                    const dateKey = `${day.toISOString().split('T')[0]}`;
+                    //const datePrefix = `${day.toISOString().split('T')[0]}T${String(hour).padStart(2, '0')}:`;
                     const tasksForSlot = Object.keys(tasks)
-                        .filter(key => key.startsWith(datePrefix)) // Pega todas as tarefas dentro daquela hora
-                        .flatMap(key => tasks[key]); // Junta todas em um único array
+                        .filter(key => key.startsWith(dateKey)) // Pega todas as tarefas dentro daquela hora
+                        .flatMap(key => tasks[key]) // Junta todas em um único array
+                        .filter(task => parseInt(task.startTime.split(':')[0]) === hour); // Filtra pelo horário exato; 
+
                     return (
                         <div key={day.toISOString()} className="day-cell">
                             {tasksForSlot.map((task, index) => (
@@ -76,7 +80,7 @@ export default function WeeklyCalendar() {
                                     className="task"
                                     onClick={() => handleTaskClick(task)}
                                 >
-                                    {task.title}
+                                    {`${task.title} (${task.startTime})`}
                                 </div>
                             ))}
                         </div>
@@ -112,6 +116,7 @@ export default function WeeklyCalendar() {
                     {currentWeek[6]?.toLocaleDateString()}
                 </span>
                 <button onClick={handleNextWeek}>Próxima Semana</button>
+                <button onClick={() => setShowTaskForm(true)}>Nova Tarefa</button>
             </div>
             <div className="calendar-grid-week">
                 <div className="calendar-row">
@@ -127,6 +132,17 @@ export default function WeeklyCalendar() {
                 </div>
                 {renderGrid()}
             </div>
+
+            {/* Formulário de nova tarefa */}
+            {showTaskForm && (
+                <TaskForm
+                    onSubmit={() => {
+                        fetchTasks(); // Atualiza calendário após criar tarefa
+                        setShowTaskForm(false); // Fecha o formulário
+                    }}
+                    onCancel={() => setShowTaskForm(false)}
+                />
+            )}
             {selectedTask && <TaskCard
                 task={selectedTask}
                 onClose={handleCloseTaskCard}
